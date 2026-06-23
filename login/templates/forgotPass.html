@@ -1,0 +1,62 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerâmica Barroá - Redefinir Senha</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <section class="loginSection">
+        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align:center;">2° Passo Redefinição de Senha</p>
+        <form action="" method="post" class="formulario formLogin" style="width:350px;max-width:100%;">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="novaSenha">Nova Senha</label>
+                <div class="pass-group">
+                        <input type="password" name="password" id="password" class="passInput">
+                        <span class="eye"><i data-lucide="eye-off"></i></span>
+                    </div>
+            </div>
+            <div class="input-group">
+                <label for="repeatedNovaSenha">Repita a senha</label>
+                <div class="pass-group">
+                    <input type="password" name="password" id="password" class="passInput">
+                    <span class="eye"><i data-lucide="eye-off"></i></span>
+                </div>
+            </div>
+            <div class="input-group">
+                <ul class="listaObrig" style="list-style: none;margin-top: 5px;">
+                    <li class="caracter itemLista">A senha deve conter 8 caracteres</li>
+                    <li class="umNum itemLista">A senha deve conter pelo menos 1 numero</li>
+                    <li class="umL itemLista">A senha deve conter pelo menos 1 letra maiúscula</li>
+                    <li class="especial itemLista">A senha deve conter pelo menos 1 caracter especial</li>
+                </ul>
+                <input type="submit" value="Enviar" class="sendForm">
+             </div>
+        </form>
+    </section>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="errorForm {{message.tags}}">
+                    {% if 'success' in message.tags %}
+                        <i data-lucide="circle-check" style="color:#00c853;width:20px;height:20px;"></i>
+                    {% else %}
+                        <i data-lucide="circle-x" style="color:red;width:20px;height:20px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

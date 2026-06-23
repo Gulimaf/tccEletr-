@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+</head>
+<body>
+  <header class="nav" id="nav">
+    <div class="logoNav">
+      <img src="{% static 'images/logo.png' %}" alt="logo1">
+      <p class="nameStore">Barroá</p>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span class="burgerLine"></span>
+      <span class="burgerLine"></span>
+      <span class="burgerLine"></span>
+      <span class="burgerX">&#x2715;</span>
+    </button>
+    <nav class="links" id="navLinks">
+      <a href="{% url 'home' %}#">Início</a>
+      {% comment %} <a href="{% url 'products' %}">Obras</a> {% endcomment %}
+      <a href="{% url 'home' %}#about">Sobre</a>
+      {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
+      <a href="{% url 'home' %}#contact">Encomenda</a>
+      <a href="{% url 'homePerfil' %}">Perfil</a>
+    </nav>
+  </header>
+
+  <section class="produtosSection">
+    <div class="produtosContainer">
+    </div>
+  </section>
+  <script type="application/json" id="jsonProdutosPaginaProdutos">
+    {{ produtos_json|safe }}
+  </script>
+  <script type="application/json" id="jsonImagesPaginaProdutos">
+    {{ images_json|safe }}
+  </script>
+  <script src="{% static 'js/script.js' %}"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

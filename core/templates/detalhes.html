@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+</head>
+<body>
+
+    <header class="nav" id="nav">
+        <div class="logoNav">
+            <img src="{% static 'images/logo.png' %}" alt="logo1">
+            <p class="nameStore">Barroá</p>
+        </div>
+        <button class="burger" id="burger" aria-label="Menu">
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerX">&#x2715;</span>
+        </button>
+        <nav class="links" id="navLinks">
+            <a href="#">Início</a>
+            <a href="{% url 'products' %}">Obras</a>
+            <a href="#about">Sobre</a>
+            {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
+            <a href="#contact">Encomenda</a>
+            <a href="{% url 'homePerfil' %}">Perfil</a>
+        </nav>
+    </header>
+    <section class="detalhesProduto">
+    <div class="imagemContainer">
+        <img class="produtoImagem" src="" alt="produto">
+    </div>
+    <div class="infoContainer">
+        <div class="coresContainer"></div>
+        <p>Nome: <span class="nomeProduto"></span></p>
+        <p>Descrição: <span class="descricaoProduto"></span></p>
+        <p>Valor: <span class="valorProduto"></span></p>
+        {% comment %} <p>Proporção:<span class="proporcaoProduto"></span></p> {% endcomment %}
+        <p class="volumeContainer" style="display:none;">Volume: <span class="volumeProduto"></span></p>
+        
+        <a href="/produtos/" class="fecharBtn">Fechar</a>
+    </div>
+    </section>
+    <script id="jsonProdutos" type="application/json">
+        {{ produto_json|safe }}
+    </script>
+    <script id="jsonCores" type="application/json">
+        {{ cores_json|safe }}
+    </script>
+    <script id="jsonImages" type="application/json">
+        {{ images_json|safe }}
+    </script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

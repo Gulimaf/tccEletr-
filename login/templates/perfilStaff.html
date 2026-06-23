@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá - Perfil</title>
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body style="display: flex;flex-direction: column;">
+    <header class="nav" id="nav">
+        <div class="logoNav">
+            <img src="{% static 'images/logo.png' %}" alt="logo1">
+            <p class="nameStore">Barroá</p>
+        </div>
+        <button class="burger" id="burger" aria-label="Menu">
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerX">&#x2715;</span>
+        </button>
+        <nav class="links" id="navLinks">
+            <a href="{% url 'home' %}#">Início</a>
+            <a href="{% url 'products' %}">Obras</a>
+            <a href="{% url 'home' %}#about">Sobre</a>
+            {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
+            <a href="{% url 'home' %}#contact">Encomenda</a>
+            <p class="logoutBtn">Sair</a>
+        </nav>
+    </header>
+    <section class="cadProdutos">
+        <div class="cad">
+            <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Produto</p>
+            <form action="{%url 'cadProduto' %}" method="post" class="formulario">
+                {% csrf_token %}
+                <div class="input-group">
+                <label for="">Código do produto:</label>
+                <input type="number" name="codigo" id="codigo" placeholder="Código" required>
+            </div>
+            <div class="input-group">
+                <label for="">Descricao do produto:</label>
+                <input type="text" name="descricao" id="descricao" required>
+            </div>
+            <div class="input-group">
+                <label for="">Valor:</label>
+                <input type="number" name="valor" id="valor" required>
+            </div>
+            <div class="input-group">
+                <label for="">Quantidade:</label>
+                <input type="number" name="quantidade" id="quantidade" required >
+            </div>
+            <div class="input-group">
+                <label for="">Altura:</label>
+                <input type="number" name="altura" id="altura" inputmode="decimal" min="0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="">Largura:</label>
+                <input type="number" name="largura" id="largura" inputmode="decimal" min="0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="">Comprimento:</label>
+                <input type="number" name="comprimento" id="comprimento" inputmode="decimal" min="0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="">Volume(L):</label>
+                <input type="number" name="volume" id="volume" inputmode="decimal" min="0.00" required>
+            </div>
+            <div class="input-group">
+                <label for="">Categoria:</label>
+                <input type="text" name="categoria" id="categoria" placeholder="(separe por vírgula)" required>
+            </div>
+            <div class="input-group">
+                <label for="">S ou N:</label>
+                <input type="text" name="ativo" id="ativo" placeholder="Sim ou não" required>
+            </div>
+            <div class="input-group">
+                <label for="">Peso:</label>
+                <input type="number" name="peso" id="peso" placeholder="(arredondado pra maior)" required>
+            </div>
+            <div class="input-group">
+                <input type="submit" value="Cadastrar">
+            </div>   
+            </form>
+        </div>
+        <div class="alt">
+            <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Editar Produto</p>
+            <form action="{%url 'cadProduto' %}" method="post" class="formulario edtForm">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="">Id do produto:</label>
+                    <input type="text" name="descricao" id="descricao" required readonly class="id"> 
+                </div>
+                <div class="input-group">
+                    <label for="">Código do produto:</label>
+                    <input type="number" name="codigo" id="codigo" placeholder="Código" required class="codigo">
+                </div>
+                <div class="input-group">
+                    <label for="">Valor:</label>
+                    <input type="number" name="valor" id="valor" required class="valor">
+                </div>
+                <div class="input-group">
+                    <label for="">Quantidade:</label>
+                    <input type="number" name="quantidade" id="quantidade" required class="quantidade">
+                </div>
+                <div class="input-group">
+                    <label for="">Altura:</label>
+                    <input type="number" name="altura" id="altura" inputmode="decimal" min="0.00" required class="altura">
+                </div>
+                <div class="input-group">
+                    <label for="">Largura:</label>
+                    <input type="number" name="Largura" id="Largura" inputmode="decimal" min="0.00" required class="largura">
+                </div>
+                <div class="input-group">
+                    <label for="">Comprimento:</label>
+                    <input type="number" name="Comprimento" id="Comprimento" inputmode="decimal" min="0.00" required class="comprimento">
+                </div>
+                <div class="input-group">
+                    <label for="">Volume(L):</label>
+                    <input type="number" name="Volume" id="Volume" inputmode="decimal" min="0.00" required class="volume"> 
+                </div>
+                <div class="input-group">
+                    <label for="">Categoria:</label>
+                    <input type="text" name="categoria" id="categoria" placeholder="(separe por vírgula)" required class="categoria">
+                </div>
+                <div class="input-group">
+                    <label for="">S ou N:</label>
+                    <input type="text" name="ativo" id="ativo" placeholder="Sim ou não" required class="ativo">
+                </div>
+                <div class="input-group">
+                    <label for="">Peso:</label>
+                    <input type="number" name="peso" id="peso" placeholder="(arredondado pra maior)" required class="peso">
+                </div>
+                <div class="input-group">
+                    <label for="">Descricao do produto:</label>
+                    <input type="text" name="descricao" id="descricao" required class="descricao">
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Editar"class="btnSendEdt">
+                </div>   
+            </form>
+        </div>
+    </section>
+    <section class="cardsProduto"></section>
+    <section class="cadCor">
+        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Cor</p>
+        <form action="{% url 'cadCor' %}" method="POST" class="formulario"style="max-width: 400px;">
+            {% csrf_token %}
+            <div class="input-group">
+            <label>Produto</label>
+            <select name="produto" required class="selectProduct">
+                <option value="">Selecione um produto</option>
+                {% for p in produtos %}
+                <option value="{{ p.codigo }}">
+                    {{ p.codigo }}
+                </option>
+                {% endfor %}
+            </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Cor</label>
+                <input type="text" name="cor" placeholder="Digite a cor" required>
+            </div>
+            <div class="input-group">
+                <input type="submit" value="Cadastrar"></input>
+            </div>
+            </form>
+    </section>
+
+    <section class="cadImagem">
+        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Imagem</p>
+        <form method="POST" action="{%url 'cadImagem' %}" enctype="multipart/form-data" class="formImagem">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="produto">Produto</label>
+                <select id="produto" name="produto" required class="selectProduct">
+                    <option value="">Selecione um produto</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="cor">Cor</label>
+                <select id="cor" name="cor" disabled required class="selectColor">
+                    <option value="">Selecione primeiro um produto</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="imagem">Imagem</label>
+                <input type="file" id="imagem" name="imagem" accept="image/*" required class="inputImage">
+            </div>
+            <div class="previewContainer">
+                <img id="previewImagem" src="" alt="" class="previewImage">
+            </div>
+            <div class="input-group">
+                <input type="submit" value="Cadastrar">
+            </div>
+        </form>
+    </section>
+    <script id="jsonProdutos" type="application/json">
+        {{ produtos_json|safe }}
+    </script>
+    <script id="jsonCores" type="application/json">
+        {{ cores_json|safe }}
+    </script>
+    <script id="jsonImages" type="application/json">
+        {{ images_json|safe }}
+    </script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

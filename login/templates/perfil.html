@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá - Perfil</title>
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="nav" id="nav">
+        <div class="logoNav">
+            <img src="{% static 'images/logo.png' %}" alt="logo1">
+            <p class="nameStore">Barroá</p>
+        </div>
+        <button class="burger" id="burger" aria-label="Menu">
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerLine"></span>
+            <span class="burgerX">&#x2715;</span>
+        </button>
+        <nav class="links" id="navLinks">
+            <a href="{% url 'home' %}#">Início</a>
+            <a href="{% url 'products' %}">Obras</a>
+            <a href="{% url 'home' %}#about">Sobre</a>
+            {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
+            <a href="{% url 'home' %}#contact">Encomenda</a>
+            <p class="logoutBtn">Sair</a>
+        </nav>
+    </header>
+    <h1>Perfil comum</h1>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

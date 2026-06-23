@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá - Cadastro</title>
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <section class="loginSection">
+    <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;">Cadastro</p>
+        <form action="{% url 'register' %}" method="post" class="formulario formLogin" style="max-width:350px;">
+          {% csrf_token %}
+          <div class="input-group">
+             <label for="">Nome:</label>
+             <input type="text" name="nome" id="nome" class="usernameInput">
+          </div>
+          <div class="input-group">
+             <label for="">Email:</label>
+             <input type="email" name="email" id="email" class="emailInput">
+          </div>
+          <div class="input-group">
+            <label for="">Telefone:</label>
+            <input type="tel" name="telefone" id="telefone" maxlength="11" inputmode="numeric" class="telInput">
+         </div>
+         <div class="input-group">
+            <label for="">Senha:</label>
+            <div class="pass-group">
+                        <input type="password" name="password" id="password" class="passInput">
+                        <span class="eye"><i data-lucide="eye-off"></i></span>
+                    </div>
+         </div>
+          <div class="input-group">
+             <ul class="listaObrig" style="list-style: none;margin-top: 5px;">
+                <li class="caracter itemLista">A senha deve conter 8 caracteres</li>
+                <li class="umNum itemLista">A senha deve conter pelo menos 1 numero</li>
+                <li class="umL itemLista">A senha deve conter pelo menos 1 letra maiúscula</li>
+                <li class="especial itemLista">A senha deve conter pelo menos 1 caracter especial</li>
+            </ul>
+            <input type="submit" value="Cadastrar" class="sendForm">
+          </div>
+        </form>
+    </section>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="errorForm {{message.tags}}">
+                    {% if 'success' in message.tags %}
+                        <i data-lucide="circle-check" style="color:#00c853;width:20px;height:20px;"></i>
+                    {% else %}
+                        <i data-lucide="circle-x" style="color:red;width:20px;height:20px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+   <script src="{% static 'js/script.js' %}"></script>
+   <script src="https://unpkg.com/lucide@latest"></script>
+   <script>lucide.createIcons();</script>
+</body>
+</html>

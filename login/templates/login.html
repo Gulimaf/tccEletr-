@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cerâmica Barroá - Login</title>
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <section class="loginSection">  
+        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;">Login</p>
+            <form action="{% url 'login' %}" method="post" class="formulario formLogin" style="max-width:350px;">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="">Email:</label>
+                    <input type="email" name="email" id="email" class="emailInput">
+                </div>
+                <div class="input-group">
+                    <label for="">Senha:</label>
+                    <div class="pass-group">
+                        <input type="password" name="password" id="password" class="passInput">
+                        <span class="eye"><i data-lucide="eye-off"></i></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Entrar" class="sendForm">
+                </div>
+                <a href="{% url 'redefinirSenha' %}" style="text-decoration:underline;" class="formText">Esqueceu sua senha?</a>
+                <p style="text-align: left;" class="formText">Não tem uma conta? <a href="{%url 'register' %}" style="text-decoration:underline;">cadastrar-se</a></p>
+            </form>  
+    </section>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="errorForm {{message.tags}}">
+                    {% if 'success' in message.tags %}
+                        <i data-lucide="circle-check" style="color:#00c853;width:20px;height:20px;"></i>
+                    {% else %}
+                        <i data-lucide="circle-x" style="color:red;width:20px;height:20px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
