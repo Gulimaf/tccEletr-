@@ -25,12 +25,29 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['localhost',
+    '127.0.0.1',
+    '.ngrok-free.dev','*']
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.dev',
+]
+MELHOR_ENVIO_CLIENT_ID = os.getenv("MELHOR_ENVIO_CLIENT_ID")
+MELHOR_ENVIO_CLIENT_SECRET = os.getenv("MELHOR_ENVIO_CLIENT_SECRET")
+MELHOR_ENVIO_REDIRECT_URI = os.getenv("MELHOR_ENVIO_REDIRECT_URI")
+MELHOR_ENVIO_BASE_URL = "https://sandbox.melhorenvio.com.br"
+MELHOR_ENVIO_USER_AGENT = ("Ceramica Barroa - gustavo.lfs2009@gmail.com")
+MELHOR_ENVIO_FROM_NAME = os.getenv("MELHOR_ENVIO_FROM_NAME")
+MELHOR_ENVIO_FROM_EMAIL = os.getenv("MELHOR_ENVIO_FROM_EMAIL")
+MELHOR_ENVIO_FROM_PHONE = os.getenv("MELHOR_ENVIO_FROM_PHONE")
+MELHOR_ENVIO_FROM_DOCUMENT = os.getenv("MELHOR_ENVIO_FROM_DOCUMENT")
+MELHOR_ENVIO_FROM_ADDRESS = os.getenv("MELHOR_ENVIO_FROM_ADDRESS")
+MELHOR_ENVIO_FROM_NUMBER = os.getenv("MELHOR_ENVIO_FROM_NUMBER")
+MELHOR_ENVIO_FROM_DISTRICT = os.getenv("MELHOR_ENVIO_FROM_DISTRICT")
+MELHOR_ENVIO_FROM_CITY = os.getenv("MELHOR_ENVIO_FROM_CITY")
+MELHOR_ENVIO_FROM_POSTAL_CODE = os.getenv("MELHOR_ENVIO_FROM_POSTAL_CODE")
+MELHOR_ENVIO_FROM_STATE = os.getenv("MELHOR_ENVIO_FROM_STATE")
+EMAIL_ENCOMENDAS = "gustavo.lfs2009@gmail.com"
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,16 +57,40 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "login",
+    "cart",
+    "melhor_envio",
+    "checkout",
+    "django_smart_ratelimit",
 ]
+RATELIMIT_BACKEND = 'redis'
+RATELIMIT_REDIS = {
+    "host": "localhost",
+    "port": 6379,
+    "db": 0,
+}
+FIELD_ENCRYPTION_KEY = os.getenv("FIELD_ENCRYPTION_KEY")
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000  
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'SAMEORIGIN' 
+SECURE_REFERRER_POLICY = "same-origin"
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "ceramica.middleware.SecurityHeadersMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "ceramica.middleware.Custom429Middleware"
 ]
 
 ROOT_URLCONF = "ceramica.urls"
@@ -57,7 +98,7 @@ ROOT_URLCONF = "ceramica.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -65,6 +106,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "cart.context_processors.cart",
+                
             ],
         },
     },

@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Pedido - Cerâmica Barroá</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8;padding:40px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                    
+                    <!-- Cabeçalho com Logo -->
+                    <tr>
+                        <td align="center" style="background-color:#1f2937;padding:30px;">
+                            <img src="https://ceramicabarroa.com.br/static/images/barroa.png" alt="Cerâmica Barroá" style="width: 200px;height: 100px;object-fit: contain;">
+                        </td>
+                    </tr>
+
+                    <!-- Corpo Principal -->
+                    <tr>
+                        <td style="padding:40px 35px;">
+                            <h2 style="margin-top:0;color:#111827;font-size:22px;">
+                                Olá, {{ pedido.nome_cliente }}!
+                            </h2>
+                            <p style="font-size:16px;color:#4b5563;line-height:1.7;margin-bottom:20px;">
+                                Ótimas notícias! O pagamento do seu pedido <strong>#{{ pedido.id }}</strong> foi aprovado com sucesso e já estamos preparando tudo com muito carinho por aqui.
+                            </p>
+
+                            <!-- Tabela de Produtos -->
+                            <h3 style="color:#111827;font-size:16px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;margin-top:30px;">
+                                Resumo dos Itens
+                            </h3>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:15px;">
+                                {% for item in itens %}
+                                <tr>
+                                    <td style="padding: 12px 0; border-bottom: 1px solid #f3f4f6; width: 64px; vertical-align: middle;">
+                                        {% if item.produto.imagem %}
+                                        <img src="{{ site_url }}{{ item.produto.imagem.url }}"
+                                            alt="{{ item.produto.nome }}"
+                                            width="50"
+                                            height="50"
+                                            style="width: 50px; height: 50px; object-fit: cover;
+                                                    border-radius: 6px; border: 1px solid #e5e7eb;">
+                                        {% else %}
+                                            <div style="width: 50px; height: 50px; background-color: #e5e7eb; border-radius: 6px; text-align: center; line-height: 50px; color: #9ca3af; font-size: 10px;">Sem foto</div>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle;">
+                                        <span style="font-size: 14px; font-weight: bold; color: #111827; display: block;">{{ item.produto.nome }}</span>
+                                        <span style="font-size: 13px; color: #6b7280; display: block; margin-top: 2px;">
+                                            Cor: <strong>{{ item.cor.nome|default:item.cor.cor }}</strong> | Qtd: <strong>{{ item.quantidade }}</strong>
+                                        </span>
+                                    </td>
+                                    <td align="right" style="padding: 12px 0; border-bottom: 1px solid #f3f4f6; vertical-align: middle; white-space: nowrap;">
+                                        <span style="font-size: 14px; font-weight: bold; color: #111827;">R$ {{ item.subtotal|floatformat:2 }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+
+                            <!-- Totais e Valores -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px; background-color: #f9fafb; border-radius: 6px; padding: 15px;">
+                                <tr>
+                                    <td style="padding: 6px 10px; color: #4b5563; font-size: 14px;">Subtotal:</td>
+                                    <td align="right" style="padding: 6px 10px; color: #111827; font-size: 14px;">R$ {{ pedido.subtotal|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px 10px; color: #4b5563; font-size: 14px;">Frete ({{ pedido.servico_frete }}):</td>
+                                    <td align="right" style="padding: 6px 10px; color: #111827; font-size: 14px;">R$ {{ pedido.frete|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 10px 4px 10px; color: #111827; font-size: 16px; font-weight: bold; border-top: 1px solid #e5e7eb;">Total Pago:</td>
+                                    <td align="right" style="padding: 10px 10px 4px 10px; color: #16a34a; font-size: 18px; font-weight: bold; border-top: 1px solid #e5e7eb;">R$ {{ pedido.total|floatformat:2 }}</td>
+                                </tr>
+                            </table>
+
+                            <!-- Endereço de Entrega -->
+                            <h3 style="color:#111827;font-size:16px;border-bottom:2px solid #e5e7eb;padding-bottom:8px;margin-top:30px;">
+                                Endereço de Entrega
+                            </h3>
+                            <p style="font-size:14px;color:#4b5563;line-height:1.6;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:6px;padding:15px;margin-top:10px;">
+                                {{ pedido.endereco }}, nº {{ pedido.numero }} {% if pedido.complemento %}- {{ pedido.complemento }}{% endif %}<br>
+                                Bairro: {{ pedido.bairro }}<br>
+                                {{ pedido.cidade }} - {{ pedido.estado }}<br>
+                                CEP: {{ pedido.cep }}
+                            </p>
+
+                            <!-- Botão de Ação -->
+                            <div style="text-align:center;margin:35px 0;">
+                                <a href="{{ link_botao }}"
+                                   style="background-color:#f97316;color:#ffffff;
+                                   text-decoration:none;padding:14px 28px;
+                                   border-radius:6px;font-weight:bold;
+                                   display:inline-block;cursor: pointer;">
+                                    {{ texto_botao }}
+                                </a>
+                            </div>
+
+                            <p style="font-size:14px;color:#6b7280;line-height:1.6;">
+                                Caso o botão acima não funcione, copie e cole o link abaixo em seu navegador:
+                            </p>
+                            <p style="word-break:break-all;font-size:14px;color:#2563eb;">
+                                {{ link_botao }}
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Rodapé -->
+                    <tr>
+                        <td style="background-color:#f9fafb;padding:25px;text-align:center;border-top:1px solid #e5e7eb;">
+                            <p style="margin:0;color:#6b7280;font-size:13px;">
+                                © 2026 Cerâmica Barroá. Todos os direitos reservados.
+                            </p>
+                            <p style="margin-top:10px;color:#9ca3af;font-size:12px;">
+                                Este é um e-mail automático. Por favor, não responda esta mensagem.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

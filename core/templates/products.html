@@ -8,39 +8,174 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
   <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  
 </head>
 <body>
-  <header class="nav" id="nav">
+    <div class="mensagens"></div>
+  <header class="nav siteHeader" id="nav">
+  <div class="headerContainer">
     <div class="logoNav">
       <img src="{% static 'images/logo.png' %}" alt="logo1">
       <p class="nameStore">Barroá</p>
     </div>
-    <button class="burger" id="burger" aria-label="Menu">
-      <span class="burgerLine"></span>
-      <span class="burgerLine"></span>
-      <span class="burgerLine"></span>
-      <span class="burgerX">&#x2715;</span>
-    </button>
-    <nav class="links" id="navLinks">
-      <a href="{% url 'home' %}#">Início</a>
-      {% comment %} <a href="{% url 'products' %}">Obras</a> {% endcomment %}
-      <a href="{% url 'home' %}#about">Sobre</a>
-      {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
-      <a href="{% url 'home' %}#contact">Encomenda</a>
-      <a href="{% url 'homePerfil' %}">Perfil</a>
-    </nav>
-  </header>
-
+    <div class="navButtons navActions">
+      {% if request.user != AnonymousUser%}
+        <p class="logoutBtn carrinho actionIcon"><i data-lucide="log-out" class="carrinhoIcon"></i></p>
+      {% endif %}
+      <a href="{% url 'homePerfil' %}" class="actionIcon carrinho" aria-label="Minha Conta">
+        <i data-lucide="user" class="carrinhoIcon"></i>
+      </a>
+      <a href="{% url 'cart' %}" class="carrinho">
+        <i class="carrinhoIcon" data-lucide="shopping-cart"></i>
+        {% if cart|length > 0 %}
+          <span class="carrinhoQuantidade">{{cart|length}}</span>
+        {% endif %}
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerX">&#x2715;</span>
+      </button>
+    </div>
+    <div class="barraPesquisa" id="barraPesquisa">
+      <i data-lucide="search"></i>
+      <input type="search" id="inputPesquisa" placeholder="Buscar produtos..." autocomplete="off">
+      <button type="button" id="limparPesquisa" aria-label="Limpar pesquisa">
+          <i data-lucide="x"></i>
+      </button>
+      <div class="resultadoPesquisa" id="resultadoPesquisa"></div>
+    </div>
+  </div>
+  <nav class="links" id="navLinks">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'products' %}">Obras</a>
+    <a href="{% url 'home' %}#about">Sobre</a>
+    <a href="{% url 'home' %}#cursos">Oficinas e cursos</a> 
+    <a href="{% url 'home' %}#contact">Encomenda</a>
+  </nav>
+</header> 
   <section class="produtosSection">
     <div class="produtosContainer">
+        {% for produto in produtos %}
+            <div class="obra-card">
+                {% with imagem=produto.imagens_produto|first %}
+                    <div class="obraImageWrap">
+                        <a class="obraImageLink"href="/produtos/{{ produto.codigo }}/">
+                            {% if imagem %}
+                                <img class="obra"src="{{ imagem.imagem.url }}"alt="{{ produto.descricao|default:produto.codigo }}"loading="lazy"
+                                >
+                            {% else %}
+                                <img class="obra"src="{% static 'img/placeholder.jpg' %}" alt="{{ produto.descricao|default:produto.codigo }}"loading="lazy">
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endwith %}
+                <div class="obraInfo">
+                    <p class="obraNome">
+                        {{ produto.nome_categoria }}
+                    </p>
+                    <div class="obraPreco">
+                    {% if produto.is_sale and produto.sale_value %}
+                        <span class="precoAntigo">
+                            R$ {{ produto.valor|floatformat:2 }}
+                        </span>
+                        <span class="precoPromocional">
+                            R$ {{ produto.sale_value|floatformat:2 }}
+                        </span>
+                    {% elif produto.valor %}
+                        <span class="precoNormal">
+                            R$ {{ produto.valor|floatformat:2 }}
+                        </span>
+                    {% endif %}
+                </div>
+                </div>
+                <a class="verMaisObra"href="/produtos/{{ produto.codigo }}/">Ver mais</a>
+            </div>
+        {% empty %}
+            <p>Nenhum produto encontrado.</p>
+        {% endfor %}
     </div>
-  </section>
-  <script type="application/json" id="jsonProdutosPaginaProdutos">
-    {{ produtos_json|safe }}
-  </script>
-  <script type="application/json" id="jsonImagesPaginaProdutos">
-    {{ images_json|safe }}
-  </script>
+</section>
+  <nav class="paginacao" aria-label="Navegação de páginas">
+      {% if produtos.has_previous %}
+          <a class="pagina pagina-nav" href="?page={{ produtos.previous_page_number }}{% if busca %}&busca={{ busca|urlencode }}{% endif %}" aria-label="Página anterior" title="Página anterior">
+              <i data-lucide="chevron-left"></i>
+          </a>
+      {% endif %}
+      <span class="info-paginacao">
+          Página <strong>{{ produtos.number }}</strong>de <strong>{{ produtos.paginator.num_pages }}</strong>
+      </span>
+      {% if produtos.has_next %}
+          <a class="pagina pagina-nav" href="?page={{ produtos.next_page_number }}{% if busca %}&busca={{ busca|urlencode }}{% endif %}" aria-label="Próxima página" title="Próxima página">
+              <i data-lucide="chevron-right"></i>
+          </a>
+      {% endif %}
+  </nav>
+    <footer class="rodape">
+    <div class="rodape-container">
+      <div class="rodape-brand">
+        <div class="rodape-logo">
+          <img src="{% static 'images/logo.png' %}" alt="Barroá">
+          <span>Barroá</span>
+        </div>
+        <p>
+          Cerâmica feita à mão, com propósito, afeto e conexão. Peças únicas que carregam histórias e transformam momentos.
+        </p>
+        <div class="rodape-social">
+          <a href="https://www.instagram.com/barroa_ceramica?psln=OGN4aHNsdzMyajg5" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/5519991162601"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Comprar</h3>
+        <a href="{% url 'products' %}">Obras</a>
+        <a href="{% url 'cart' %}">Carrinho</a>
+        <a href="#contact">Encomendas</a>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Barroá</h3>
+        <a href="{% url 'home' %}#about">Sobre nós</a>
+        <a href="{% url 'home' %}#cursos">Oficinas e cursos</a>
+        <a href="{% url 'home' %}#contact">Entre em contato</a>
+        <a href="{% url 'homePerfil' %}">Minha conta</a>
+      </div>
+      <div class="rodape-coluna rodape-contato">
+        <h3>Fale conosco</h3>
+        <a href="https://wa.me/5519991162601"
+           target="_blank"
+           rel="noopener noreferrer">
+          <i data-lucide="message-circle"></i>
+          WhatsApp
+        </a>
+        <a href="mailto:jcconcalez@hotmail.com">
+          <i data-lucide="mail"></i>
+          jcconcalez@hotmail.com
+        </a>
+        <span>
+          <i data-lucide="clock"></i>
+          Atendimento de segunda a sexta
+        </span>
+      </div>
+    </div>
+    <div class="rodape-bottom">
+      <div>
+        <span>© 2026 Barroá. Todos os direitos reservados.</span>
+      </div>
+      
+    </div>
+  </footer>
   <script src="{% static 'js/script.js' %}"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>

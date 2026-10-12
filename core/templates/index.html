@@ -10,26 +10,53 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-  <header class="nav" id="nav">
+  <div class="mensagens"></div>
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+  <header class="nav siteHeader" id="nav">
+  <div class="headerContainer">
     <div class="logoNav">
       <img src="{% static 'images/logo.png' %}" alt="logo1">
       <p class="nameStore">Barroá</p>
     </div>
-    <button class="burger" id="burger" aria-label="Menu">
-      <span class="burgerLine"></span>
-      <span class="burgerLine"></span>
-      <span class="burgerLine"></span>
-      <span class="burgerX">&#x2715;</span>
-    </button>
-    <nav class="links" id="navLinks">
-      <a href="#">Início</a>
-      <a href="{% url 'products' %}">Obras</a>
-      <a href="#about">Sobre</a>
-      {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
-      <a href="#contact">Encomenda</a>
-      <a href="{% url 'homePerfil' %}">Perfil</a>
-    </nav>
-  </header>
+    <div class="navButtons navActions">
+      {% if request.user != AnonymousUser%}
+        <p class="logoutBtn carrinho actionIcon"><i data-lucide="log-out" class="carrinhoIcon"></i></p>
+      {% endif %}
+      <a href="{% url 'homePerfil' %}" class="actionIcon carrinho" aria-label="Minha Conta">
+        <i data-lucide="user" class="carrinhoIcon"></i>
+      </a>
+      <a href="{% url 'cart' %}" class="carrinho">
+        <i class="carrinhoIcon" data-lucide="shopping-cart"></i>
+        {% if cart|length > 0 %}
+          <span class="carrinhoQuantidade">{{cart|length}}</span>
+        {% endif %}
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerX">&#x2715;</span>
+      </button>
+    </div>
+    <div class="barraPesquisa" id="barraPesquisa">
+      <i data-lucide="search"></i>
+      <input type="search" id="inputPesquisa" placeholder="Buscar produtos..." autocomplete="off">
+      <button type="button" id="limparPesquisa" aria-label="Limpar pesquisa">
+          <i data-lucide="x"></i>
+      </button>
+      <div class="resultadoPesquisa" id="resultadoPesquisa"></div>
+    </div>
+  </div>
+  <nav class="links" id="navLinks">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'products' %}">Obras</a>
+    <a href="{% url 'home' %}#about">Sobre</a>
+    <a href="{% url 'home' %}#cursos">Oficinas e cursos</a> 
+    <a href="{% url 'home' %}#contact">Encomenda</a>
+  </nav>
+</header> 
   <section class="hero">
     <div class="circle"></div>
     <div class="circle2"></div>
@@ -55,115 +82,300 @@
             </a>
         </div>
   </section>
-  {% comment %} <section id="obras" class="obras sectionBorder">
-    <div class="containerObras">
-      <p class="label">Obras</p>
-      <div class="obras-row">
-        <div class="obra-card">
-          <img src="lima1.jpg" alt="" class="obra">
-          <a href="#" class="verMaisObra">Ver mais</a>
-        </div>
-        <div class="obra-card">
-          <img src="lima2.jpg" alt="" class="obra">
-          <a href="#" class="verMaisObra">Ver mais</a>
-        </div>
-        <div class="obra-card">
-          <img src="lima3.jpg" alt="" class="obra">
-          <a href="#" class="verMaisObra">Ver mais</a>
-        </div>
-        <div class="obra-card">
-          <img src="nossa_senhora.jpg" alt="" class="obra">
-          <a href="#" class="verMaisObra">Ver mais</a>
-        </div>
-        </div>
-    </div>
-  </section> {% endcomment %}
-
   <section id="about" class="secao sectionBorder sobre">
     <p class="label cont">Sobre</p>
     <div class="sobreContent">
       <div class="slider">
-        <div class="slides">
-          <input type="radio" name="btn" id="radio1" checked>
-          <input type="radio" name="btn" id="radio2">
-          <div class="slide first">
-            <img src="" alt="foto1">
-          </div>
-          <div class="slide">
-            <img src="" alt="foto2">
-          </div>
-          <div class="manual-navigation">
-              <label for="radio1" class="manual-btn"></label>
-              <label for="radio2" class="manual-btn"></label>
-          </div>
-        </div>
-      </div>
-      <div class="textos">
-        <p class="txt">Em breve aqui será inserido um texto sobre a cerâmica.</p>
-      </div>
+  <div class="slides">
+    <input type="radio" name="btn" id="radio1" checked>
+    <input type="radio" name="btn" id="radio2">
+    <div class="slide first">
+      <img src="{% static 'images/foto1.jpg' %}" alt="Foto 1">
     </div>
+    <div class="slide">
+      <img src="{% static 'images/foto2.jpg' %}" alt="Foto 2">
+    </div>
+    <div class="manual-navigation">
+        <label for="radio1" class="manual-btn"></label>
+        <label for="radio2" class="manual-btn"></label>
+    </div>
+  </div>
+</div>
+    <div class="textos">
+      <p class="txt txt1">
+        O Ateliê Barroá nasceu de um sonho construído com as mãos, com o coração e com a família. 
+        Eu sou Fernanda Busso, ceramista, mãe da Mariah e esposa do João.
+        Foi na cerâmica que encontrei calma, presença e um novo jeito de olhar para a vida e esse caminho, naturalmente, virou propósito.
+        O Barroá é mais do que um ateliê.
+        É um espaço criado para ensinar, criar e conectar pessoas.
+        Aqui, o tempo desacelera, o barro vira linguagem e cada pessoa é convidada a experimentar, aprender e se expressar do seu jeito.
+        Esse sonho não foi construído sozinha.
+        Ele cresce em família, com afeto, apoio e a certeza de que quando criamos juntos, tudo faz mais sentido.
+        Seja bem-vindo ao Barroá.
+        Um lugar de encontros, histórias e mãos que transformam.
+      </p>
+      <p class="txt txt2">
+       A Cerâmica entrou na minha vida para melhorar minhas habilidades manuais e também para controlar a minha ansiedade.
+       Afinal quem se propõe a fazer cerâmica não pode ter pressa.
+       Depois de 4 anos de curso, percebi que estava apaixona por essa arte e resolvi dividir com amigos.
+       Saber esperar cada processo da transformação da argila em cerâmica é mágico e transformador.
+       Sou uma eterna aprendiz, adoro aprender e faço tudo com muita dedicação.
+       Cada peça é feita a mão, uma a uma, com muito amor e carinho.
+      </p>
+     </div>
+  </div>
   </section>
 
-  {% comment %} <section id="events" class="secao sectionBorder">
-    <p class="label">Oficinas e cursos</p>
-    <div class="eventos-row">
-      <div class="event">
-        <div><i data-lucide="palette" class="palette"></i></div>
-        <div class="textos-card">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-          <a href="/eventos/VerMais.html" class="verMais">Ver Mais</a>
-        </div>
-      </div>
-      <div class="event">
-        <div><i data-lucide="palette" class="palette"></i></div>
-        <div class="textos-card">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-          <a href="/eventos/VerMais.html" class="verMais">Ver Mais</a>
-        </div>
-      </div>
-      <div class="event">
-        <div><i data-lucide="palette" class="palette"></i></div>
-        <div class="textos-card">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-          <a href="/eventos/VerMais.html" class="verMais">Ver Mais</a>
-        </div>
-      </div>
+  <section id="cursos" class="secao sectionBorder cursos">
+    <p class="label">Cursos</p>
+    <div class="cursos-intro">
+        <h2 class="special">Aprenda a criar com o barro</h2>
+        <p>No Barroá, cada aula é um convite para desacelerar, experimentar e transformar a argila em algo único.</p>
     </div>
-  </section> {% endcomment %}
-
-  <section id="contact" class="secao sectionBorder">
-    <p class="cont label">Encomenda</p>
-    <div class="contato-bloco" id="contato">
-      <form action="" method="post" class="formulario cancelar">
-        <div class="input-group">
-          <label for="nome">Nome:</label>
-          <input type="text" name="nome" id="nome" placeholder="Nome">
+    <div class="cursos-grid">
+        <article class="curso-card">
+            <div class="curso-imagem">
+                <img src="{% static 'images/modelagem.jpeg' %}"alt="Aula de Modelagem Manual">
+            </div>
+            <div class="curso-conteudo">
+                <span class="curso-tag">Modelagem</span>
+                <h3>Modelagem Manual</h3>
+                <p class="curso-descricao">
+                    Aprenda técnicas de modelagem manual e descubra
+                    diferentes possibilidades de criação com a argila.
+                    Uma experiência para desenvolver sua criatividade
+                    e suas habilidades manuais.
+                </p>
+                <div class="curso-info">
+                    <div class="curso-info-item">
+                        <i data-lucide="clock"></i>
+                        <div>
+                            <strong>Aulas</strong>
+                            <span>2h30 de duração</span>
+                        </div>
+                    </div>
+                    <div class="curso-info-item">
+                        <i data-lucide="calendar-days"></i>
+                        <div>
+                            <strong>Modalidades</strong>
+                            <span>Regular, quinzenal ou avulsa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="curso-valores">
+                    <h4>Valores</h4>
+                    <div class="valor-linha">
+                        <div>
+                            <strong>Aula regular</strong>
+                            <span>1x por semana</span>
+                        </div>
+                        <strong class="preco">R$ 380,00</strong>
+                    </div>
+                    <div class="valor-linha">
+                        <div>
+                            <strong>Aula quinzenal</strong>
+                            <span>2 aulas por mês</span>
+                        </div>
+                        <strong class="preco">R$ 190,00</strong>
+                    </div>
+                    <div class="valor-linha">
+                        <div>
+                            <strong>Aula avulsa</strong>
+                            <span>Aula individual</span>
+                        </div>
+                        <strong class="preco">R$ 120,00</strong>
+                    </div>
+                </div>
+                <p class="curso-observacao">
+                    Material e 2ª queima não inclusos nas aulas
+                    regular e quinzenal. Na aula avulsa, o material
+                    é cobrado de acordo com o que for utilizado.
+                </p>
+            </div>
+        </article>
+        <article class="curso-card">
+            <div class="curso-imagem">
+                <img src="{% static 'images/torno.jpeg' %}"alt="Aula de Torno">
+            </div>
+            <div class="curso-conteudo">
+                <span class="curso-tag">Torno</span>
+                <h3>Aulas de Torno</h3>
+                <p class="curso-descricao">
+                    Conheça o torno cerâmico e desenvolva suas
+                    habilidades na criação de peças. As aulas
+                    combinam acompanhamento do professor e momentos
+                    de treino para você praticar.
+                </p>
+                <div class="curso-info">
+                    <div class="curso-info-item">
+                        <i data-lucide="clock"></i>
+                        <div>
+                            <strong>Duração</strong>
+                            <span>2h30 por aula</span>
+                        </div>
+                    </div>
+                    <div class="curso-info-item">
+                        <i data-lucide="sparkles"></i>
+                        <div>
+                            <strong>Experiência</strong>
+                            <span>Professor + treino</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="curso-valores">
+                    <h4>Valores</h4>
+                    <div class="valor-linha">
+                        <div>
+                            <strong>Mensal</strong>
+                            <span>2 aulas com professor + 2 treinos</span>
+                        </div>
+                        <strong class="preco">R$ 360,00</strong>
+                    </div>
+                    <div class="valor-linha">
+                        <div>
+                            <strong>Aula avulsa</strong>
+                            <span> 1 aula com professor + 1 treino</span>
+                        </div>
+                        <strong class="preco">R$ 170,00</strong>
+                    </div>
+                </div>
+                <p class="curso-observacao">Cada aula possui duração de 2h30.</p>
+            </div>
+        </article>
+    </div>
+    <div class="cursos-contato">
+        <div>
+            <span class="curso-tag">Vamos criar?</span>
+            <h3>Entre em contato para saber mais</h3>
+            <p>Tire suas dúvidas e consulte os horários disponíveis para as aulas.</p>
         </div>
-        <div class="input-group">
-          <label for="email">Email:</label>
-          <input type="text" name="email" id="email" placeholder="123@gmail.com">
-        </div>
-        <div class="input-group">
-          <label for="assunto">Assunto:</label>
-          <input type="text" name="assunto" id="assunto" placeholder="Assunto">
-        </div>
-        <div class="input-group">
-          <label for="telefone">Telefone</label>
-          <input type="tel" name="telefone" id="telefone" placeholder="(XX) XXXXX-XXXX">
-        </div>
-        <div class="input-group">
-          <label for="mensagem">Mensagem:</label>
-          <textarea name="mensagem" id="mensagem" cols="45" rows="10"></textarea>
-        </div>
-        <input type="submit" value="Enviar">
-      </form>
+        <a href="https://wa.me/5519991162601" target="_blank" rel="noopener noreferrer" class="curso-btn">
+            <i data-lucide="message-circle"></i>Falar pelo WhatsApp
+        </a>
     </div>
   </section>
+  <section id="contact" class="secao sectionBorder encomenda"> <p class="cont label">Encomenda</p> <div class="encomendaContent"> <div class="encomendaTexto"> <h2> Uma ideia pode virar <span class="special">uma peça única.</span> </h2>
+
+  <p>
+    Quer encomendar uma peça feita especialmente para você?
+    Conte um pouco sobre o que está imaginando, seja para
+    presentear alguém, decorar sua casa ou transformar uma
+    ideia em cerâmica.
+  </p>
+
+  <p>
+    Cada encomenda é produzida à mão e pensada de acordo
+    com a sua proposta.
+  </p>
+
+  <a
+    href="https://wa.me/5519991162601?text=Olá!%20Gostaria%20de%20fazer%20uma%20encomenda%20no%20Barroá."
+    target="_blank"
+    rel="noopener noreferrer"
+    class="encomendaBotao"
+  >
+    <i data-lucide="message-circle"></i>
+    Conversar pelo WhatsApp
+  </a>
+</div>
+
+<div class="encomendaDetalhes">
+  <div class="detalhe">
+    <span>01</span>
+    <div>
+      <h3>Você conta a ideia</h3>
+      <p>
+        Explique o que gostaria de criar e para qual ocasião.
+      </p>
+    </div>
+  </div>
+
+  <div class="detalhe">
+    <span>02</span>
+    <div>
+      <h3>A gente conversa</h3>
+      <p>
+        Definimos juntos os detalhes, possibilidades e valores.
+      </p>
+    </div>
+  </div>
+
+  <div class="detalhe">
+    <span>03</span>
+    <div>
+      <h3>O barro ganha forma</h3>
+      <p>
+        Sua peça é produzida manualmente no ateliê Barroá.
+      </p>
+    </div>
+  </div>
+</div>
+
+</div> </section>
 
   <footer class="rodape">
-    <span>indeterminado &copy; 2026</span>
+    <div class="rodape-container">
+      <div class="rodape-brand">
+        <div class="rodape-logo">
+          <img src="{% static 'images/logo.png' %}" alt="Barroá">
+          <span>Barroá</span>
+        </div>
+        <p>
+          Cerâmica feita à mão, com propósito, afeto e conexão. Peças únicas que carregam histórias e transformam momentos.
+        </p>
+        <div class="rodape-social">
+          <a href="https://www.instagram.com/barroa_ceramica?psln=OGN4aHNsdzMyajg5" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/5519991162601"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Comprar</h3>
+        <a href="{% url 'products' %}">Obras</a>
+        <a href="{% url 'cart' %}">Carrinho</a>
+        <a href="#contact">Encomendas</a>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Barroá</h3>
+        <a href="{% url 'home' %}#about">Sobre nós</a>
+        <a href="{% url 'home' %}#cursos">Oficinas e cursos</a>
+        <a href="{% url 'home' %}#contact">Entre em contato</a>
+        <a href="{% url 'homePerfil' %}">Minha conta</a>
+      </div>
+      <div class="rodape-coluna rodape-contato">
+        <h3>Fale conosco</h3>
+        <a href="https://wa.me/5519991162601"
+           target="_blank"
+           rel="noopener noreferrer">
+          <i data-lucide="message-circle"></i>
+          WhatsApp
+        </a>
+        <a href="mailto:jcconcalez@hotmail.com">
+          <i data-lucide="mail"></i>
+          jcconcalez@hotmail.com
+        </a>
+        <span>
+          <i data-lucide="clock"></i>
+          Atendimento de segunda a sexta
+        </span>
+      </div>
+    </div>
+    <div class="rodape-bottom">
+      <div>
+        <span>© 2026 Barroá. Todos os direitos reservados.</span>
+      </div>
+    </div>
   </footer>
-
   <script src="{% static 'js/script.js' %}"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>

@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho | Cerâmica Barroá</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="mensagens"></div>
+<header class="nav siteHeader" id="nav">
+  <div class="headerContainer">
+    <div class="logoNav">
+      <img src="{% static 'images/logo.png' %}" alt="logo1">
+      <p class="nameStore">Barroá</p>
+    </div>
+    <div class="navButtons navActions">
+    {% if request.user != AnonymousUser%}
+        <p class="logoutBtn carrinho actionIcon"><i data-lucide="log-out" class="carrinhoIcon"></i></p>
+      {% endif %}
+      <a href="{% url 'homePerfil' %}" class="actionIcon carrinho" aria-label="Minha Conta">
+        <i data-lucide="user" class="carrinhoIcon"></i>
+      </a>
+      <a href="{% url 'cart' %}" class="carrinho">
+        <i class="carrinhoIcon" data-lucide="shopping-cart"></i>
+        {% if cart|length > 0 %}
+          <span class="carrinhoQuantidade">{{cart|length}}</span>
+        {% endif %}
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerX">&#x2715;</span>
+      </button>
+    </div>
+    <div class="barraPesquisa" id="barraPesquisa">
+      <i data-lucide="search"></i>
+      <input type="search" id="inputPesquisa" placeholder="Buscar produtos..." autocomplete="off">
+      <button type="button" id="limparPesquisa" aria-label="Limpar pesquisa">
+          <i data-lucide="x"></i>
+      </button>
+      <div class="resultadoPesquisa" id="resultadoPesquisa"></div>
+    </div>
+  </div>
+  <nav class="links" id="navLinks">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'products' %}">Obras</a>
+    <a href="{% url 'home' %}#about">Sobre</a>
+    <a href="{% url 'home' %}#cursos">Oficinas e cursos</a> 
+    <a href="{% url 'home' %}#contact">Encomenda</a>
+  </nav>
+</header> 
+<main class="cartSection">
+    <div class="cartContainer">
+        <div class="cartHeader">
+            <h1 class="cartTitle">Seu Carrinho</h1>
+            <p class="cartSubtitle">{{ cart_items|length }} item{{ cart_items|length|pluralize }} selecionado{{ cart_items|length|pluralize }}</p>
+        </div>
+        {% if cart_items %}
+        <div class="cartLayout">
+            <section class="cartItems">
+                {% for item in cart_items %}
+                <article class="cartItem" data-product-id="{{ item.produto.id_produto }}" data-color-id="{{ item.cor.id_cor }}">
+                    <div class="cartItemImage">
+                        {% if item.imagem %}
+                        <img src="{{ item.imagem.imagem.url }}" alt="{{ item.nome }}">
+                        {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.nome }}">
+                        {% endif %}
+                    </div>
+                    <div class="cartItemInfo">
+                        <h2 class="cartItemName">{{ item.nome }}</h2>
+                        <p class="cartItemColor">Cor: {{ item.cor.nome }}</p>
+                        {% if item.produto.is_sale %}
+                            <p class="cartItemPrice">R$ {{ item.produto.sale_value }}</p>
+                        {% else %}
+                            <p class="cartItemPrice">R$ {{ item.produto.valor }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="cartItemQuantity">
+                        <label>Quantidade</label>
+                        <div class="quantitySelector">
+                            <button type="button" class="quantityBtn quantityMinus" data-product-id="{{ item.produto.id_produto }}" data-color-id="{{ item.cor.id_cor }}" aria-label="Diminuir quantidade">−</button>
+                            <span class="quantityValue" data-product-id="{{ item.produto.id_produto }}" data-color-id="{{ item.cor.id_cor }}" data-quantity="{{ item.quantidade }}" data-max="{{ item.max_quantidade }}">{{ item.quantidade }}</span>
+                            <button type="button" class="quantityBtn quantityPlus" data-product-id="{{ item.produto.id_produto }}" data-color-id="{{ item.cor.id_cor }}" aria-label="Aumentar quantidade">+</button>
+                        </div>
+                        <small>Máximo: {{ item.max_quantidade }}</small>
+                    </div>
+                    <div class="cartItemSubtotal">
+                        <span>R$ {{ item.subtotal }}</span>
+                    </div>
+                    <button type="button" class="cartItemRemove" data-product-id="{{ item.produto.id_produto }}" data-color-id="{{ item.cor.id_cor }}" aria-label="Remover item">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </article>
+                {% endfor %}
+            </section>
+            <aside class="cartSummary">
+                <h2 class="summaryTitle">Resumo do Pedido</h2>
+                <div class="summaryRow">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal" data-value="{{ cart_subtotal }}">R$ {{ cart_subtotal }}</span>
+                </div>
+                <div class="deliverySelector">
+                    <input type="hidden" id="metodoEntrega" value="{{ metodo_entrega|default:'frete' }}">
+                    <button type="button" id="opcaoFrete" class="deliveryButton selected">
+                        <i data-lucide="truck"></i>
+                        <span>Entrega</span>
+                        <i data-lucide="check" class="deliveryCheck"></i>
+                    </button>
+                    <button type="button" id="opcaoRetirada" class="deliveryButton">
+                        <i data-lucide="store"></i>
+                        <span>Retirada</span>
+                        <i data-lucide="check" class="deliveryCheck"></i>
+                    </button>
+                </div>
+                <div id="freteArea">
+                    <form class="cepForm" id="cepForm" method="post" action="">
+                        {% csrf_token %}
+                        <label for="cep" class="cepLabel">Calcular frete</label>
+                        <div class="cepInputGroup">
+                            <input type="text" id="cep" name="cep" class="cepInput" value="{{ request.user.perfil.cep }}" placeholder="00000-000" maxlength="9">
+                            <button type="submit" class="cepBtn" aria-label="Calcular frete">
+                                <i data-lucide="truck"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="freteContainer" style="display:none;">
+                        <div id="opcoesFrete" class="opcoesFrete"></div>
+                    </div>
+                </div>
+                <div id="retiradaArea" class="retiradaArea" style="display:none;">
+                    <span>Retirada na loja</span>
+                </div>
+                <div class="summaryRow">
+                    <span>Frete</span>
+                    <span id="cartFrete">
+                        {% if shipping_cost %}
+                        R$ {{ shipping_cost }}
+                        {% else %}
+                        A calcular
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="summaryDivider"></div>
+                <div class="summaryRow summaryTotal">
+                    <span>Total</span>
+                    <span id="cartTotal">R$ {{ cart_total }}</span>
+                </div>
+                <a href="{% url 'checkout' %}" id="checkoutBtn" class="checkoutBtn checkoutDisabled" aria-disabled="true">
+                    Finalizar Compra
+                    <i data-lucide="arrow-right"></i>
+                </a>
+                <a href="{% url 'products' %}" class="continueShopping">
+                    <i data-lucide="arrow-left"></i>
+                    Continuar comprando
+                </a>
+            </aside>
+        </div>
+        {% else %}
+        <div class="cartEmpty">
+            <i data-lucide="shopping-cart" class="cartEmptyIcon"></i>
+            <h2>Seu carrinho está vazio</h2>
+            <p>Explore nossas peças de cerâmica artesanal e encontre algo especial.</p>
+            <a href="{% url 'products' %}" class="continueShoppingBtn">
+                Ver produtos
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</main>
+<footer class="rodape">
+    <div class="rodape-container">
+      <div class="rodape-brand">
+        <div class="rodape-logo">
+          <img src="{% static 'images/logo.png' %}" alt="Barroá">
+          <span>Barroá</span>
+        </div>
+        <p>
+          Cerâmica feita à mão, com propósito, afeto e conexão. Peças únicas que carregam histórias e transformam momentos.
+        </p>
+        <div class="rodape-social">
+          <a href="https://www.instagram.com/barroa_ceramica?psln=OGN4aHNsdzMyajg5" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/5519991162601"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Comprar</h3>
+        <a href="{% url 'products' %}">Obras</a>
+        <a href="{% url 'cart' %}">Carrinho</a>
+        <a href="#contact">Encomendas</a>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Barroá</h3>
+        <a href="{% url 'home' %}#about">Sobre nós</a>
+        <a href="{% url 'home' %}#cursos">Oficinas e cursos</a>
+        <a href="{% url 'home' %}#contact">Entre em contato</a>
+        <a href="{% url 'homePerfil' %}">Minha conta</a>
+      </div>
+      <div class="rodape-coluna rodape-contato">
+        <h3>Fale conosco</h3>
+        <a href="https://wa.me/5519991162601"
+           target="_blank"
+           rel="noopener noreferrer">
+          <i data-lucide="message-circle"></i>
+          WhatsApp
+        </a>
+        <a href="mailto:jcconcalez@hotmail.com">
+          <i data-lucide="mail"></i>
+          jcconcalez@hotmail.com
+        </a>
+        <span>
+          <i data-lucide="clock"></i>
+          Atendimento de segunda a sexta
+        </span>
+      </div>
+    </div>
+    <div class="rodape-bottom">
+      <div>
+        <span>© 2026 Barroá. Todos os direitos reservados.</span>
+      </div>
+      
+    </div>
+  </footer>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+lucide.createIcons();
+const metodoEntrega = document.getElementById("metodoEntrega");
+const opcaoFrete = document.getElementById("opcaoFrete");
+const opcaoRetirada = document.getElementById("opcaoRetirada");
+const freteArea = document.getElementById("freteArea");
+const retiradaArea = document.getElementById("retiradaArea");
+const cartFrete = document.getElementById("cartFrete");
+const cartTotal = document.getElementById("cartTotal");
+const cartSubtotal = document.getElementById("cartSubtotal");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const subtotal = parseFloat(
+    cartSubtotal.dataset.value.replace(",", ".")
+) || 0;
+function mostrarMensagem(status,sms) {
+    const container = document.querySelector(".mensagens");
+    if (!container) {
+        console.error("Container .mensagens não encontrado.");
+        return;
+    }
+    container.innerHTML = "";
+    const sucesso = status === "ok";
+    const mensagem = document.createElement("div");
+    mensagem.classList.add("errorForm",sucesso ? "success" : "error");
+    mensagem.innerHTML = `
+        <i data-lucide="${sucesso ? "circle-check" : "circle-x"}"style="color: ${sucesso ? "#00c853" : "red"};width: 20px;height: 20px;"
+        ></i>
+        ${sms}
+    `;
+    container.appendChild(mensagem);
+    lucide.createIcons();
+}
+function formatarMoeda(valor) {
+    return valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+}
+async function salvarMetodoEntrega(metodo) {
+    try {
+        const response = await fetch("/selecionar-metodo-entrega/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCsrfToken()
+            },
+            body: JSON.stringify({
+                metodo_entrega: metodo
+            })
+
+        });
+        const data = await response.json();
+        if (data.status === "erro") {
+            mostrarMensagem("erro","Erro ao selecionar o método de entrega.");
+            return false;
+        }
+        metodoEntrega.value = metodo;
+        return true;
+    } catch (erro) {
+        console.error( "Erro ao salvar método de entrega:", erro);
+        mostrarMensagem("erro","Erro ao selecionar o método de entrega.");
+        return false;
+    }
+}
+function atualizarMetodoEntrega(metodo) {
+    metodoEntrega.value = metodo;
+    if (metodo === "retirada") {
+        opcaoFrete.classList.remove("selected");
+        opcaoRetirada.classList.add("selected");
+        freteArea.style.display = "none";
+        retiradaArea.style.display = "block";
+        cartFrete.textContent = "R$ 0,00";
+        cartTotal.textContent = "R$ " + formatarMoeda(subtotal);
+        checkoutBtn.classList.remove("checkoutDisabled");
+        checkoutBtn.setAttribute( "aria-disabled","false");
+        return;
+    }
+    opcaoRetirada.classList.remove("selected");
+    opcaoFrete.classList.add("selected");
+    freteArea.style.display = "block";
+    retiradaArea.style.display = "none";
+    const frete = parseFloat(
+        "{{ shipping_cost|default:'0' }}".replace(",", ".")
+    ) || 0;
+    if (frete > 0) {
+        cartFrete.textContent = "R$ " + formatarMoeda(frete);
+        cartTotal.textContent = "R$ " + formatarMoeda(subtotal + frete);
+        checkoutBtn.classList.remove("checkoutDisabled");
+        checkoutBtn.setAttribute( "aria-disabled", "false");
+    } else {
+        cartFrete.textContent = "A calcular";
+        cartTotal.textContent = "R$ " + formatarMoeda(subtotal);
+        checkoutBtn.classList.add("checkoutDisabled");
+        checkoutBtn.setAttribute( "aria-disabled", "true");
+    }
+}
+opcaoFrete.addEventListener("click", async function () {
+    const sucesso = await salvarMetodoEntrega("frete");
+    if (!sucesso)  return;
+    atualizarMetodoEntrega("frete");
+});
+opcaoRetirada.addEventListener("click", async function () {
+    const sucesso = await salvarMetodoEntrega("retirada");
+    if (!sucesso) return;
+    atualizarMetodoEntrega("retirada");
+});
+checkoutBtn.addEventListener("click", function(event) {
+    if (metodoEntrega.value === "retirada")  return;
+    const freteSelecionado = document.querySelector(".opcaoFrete.selected");
+    if (!freteSelecionado) {
+        event.preventDefault();
+        mostrarMensagem("erro", "Selecione uma opção de frete antes de continuar.");
+        return;
+    }
+});
+atualizarMetodoEntrega(metodoEntrega.value === "retirada" ? "retirada" : "frete");
+</script>
+</body>
+</html>

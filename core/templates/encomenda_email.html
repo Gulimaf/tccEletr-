@@ -1,0 +1,259 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nova solicitação de encomenda</title>
+</head>
+
+<body style="
+    margin:0;
+    padding:0;
+    background-color:#f4f6f8;
+    font-family:Arial,Helvetica,sans-serif;
+">
+
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="background-color:#f4f6f8;padding:40px 0;">
+
+    <tr>
+        <td align="center">
+
+            <table width="600"
+                   cellpadding="0"
+                   cellspacing="0"
+                   style="
+                        background-color:#ffffff;
+                        border-radius:8px;
+                        overflow:hidden;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.08);
+                   ">
+
+                <!-- CABEÇALHO -->
+
+                <tr>
+                    <td align="center"
+                        style="
+                            background-color:#1f2937;
+                            padding:30px;
+                        ">
+
+                        <img
+                            src="https://ceramicabarroa.com.br/static/images/barroa.png"
+                            alt="Cerâmica Barroá"
+                            style="
+                                width:200px;
+                                height:100px;
+                                object-fit:contain;
+                            "
+                        >
+
+                    </td>
+                </tr>
+
+
+                <!-- CONTEÚDO -->
+
+                <tr>
+                    <td style="padding:40px 35px;">
+
+                        <h2 style="
+                            margin-top:0;
+                            color:#111827;
+                        ">
+                            Nova solicitação de encomenda
+                        </h2>
+
+
+                        <p style="
+                            font-size:16px;
+                            color:#4b5563;
+                            line-height:1.7;
+                        ">
+                            Uma nova solicitação de encomenda foi
+                            enviada através do site da Cerâmica Barroá.
+                        </p>
+
+
+                        <!-- DADOS -->
+
+                        <table width="100%"
+                               cellpadding="0"
+                               cellspacing="0"
+                               style="
+                                    margin:25px 0;
+                                    border:1px solid #e5e7eb;
+                                    border-radius:6px;
+                               ">
+
+                            <tr>
+                                <td style="
+                                    padding:12px 15px;
+                                    background:#f9fafb;
+                                    font-weight:bold;
+                                    color:#374151;
+                                ">
+                                    Nome
+                                </td>
+
+                                <td style="
+                                    padding:12px 15px;
+                                    color:#4b5563;
+                                ">
+                                    {{ nome }}
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td style="
+                                    padding:12px 15px;
+                                    background:#f9fafb;
+                                    font-weight:bold;
+                                    color:#374151;
+                                ">
+                                    E-mail
+                                </td>
+
+                                <td style="
+                                    padding:12px 15px;
+                                    color:#4b5563;
+                                ">
+                                    {{ email }}
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td style="
+                                    padding:12px 15px;
+                                    background:#f9fafb;
+                                    font-weight:bold;
+                                    color:#374151;
+                                ">
+                                    Telefone
+                                </td>
+
+                                <td style="
+                                    padding:12px 15px;
+                                    color:#4b5563;
+                                ">
+                                    {{ telefone }}
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td style="
+                                    padding:12px 15px;
+                                    background:#f9fafb;
+                                    font-weight:bold;
+                                    color:#374151;
+                                ">
+                                    Assunto
+                                </td>
+
+                                <td style="
+                                    padding:12px 15px;
+                                    color:#4b5563;
+                                ">
+                                    {{ assunto }}
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                        <!-- MENSAGEM -->
+
+                        <h3 style="
+                            color:#111827;
+                            margin-top:30px;
+                        ">
+                            Mensagem do cliente
+                        </h3>
+
+
+                        <div style="
+                            background:#f9fafb;
+                            border-left:4px solid #f97316;
+                            padding:15px 18px;
+                            margin-top:15px;
+                            color:#4b5563;
+                            font-size:15px;
+                            line-height:1.7;
+                        ">
+
+                            {{ mensagem|linebreaksbr }}
+
+                        </div>
+
+
+                        <p style="
+                            margin-top:30px;
+                            font-size:14px;
+                            color:#6b7280;
+                            line-height:1.6;
+                        ">
+                            A solicitação ainda não representa um
+                            pedido confirmado. O preço, prazo e demais
+                            condições deverão ser definidos após contato
+                            com o cliente.
+                        </p>
+
+
+                        <p style="
+                            font-size:14px;
+                            color:#6b7280;
+                            line-height:1.6;
+                        ">
+                            A prévia completa da solicitação está
+                            disponível no PDF anexado a este e-mail.
+                        </p>
+
+                    </td>
+                </tr>
+
+
+                <!-- RODAPÉ -->
+
+                <tr>
+                    <td style="
+                        background-color:#f9fafb;
+                        padding:25px;
+                        text-align:center;
+                        border-top:1px solid #e5e7eb;
+                    ">
+
+                        <p style="
+                            margin:0;
+                            color:#6b7280;
+                            font-size:13px;
+                        ">
+                            © 2026 Cerâmica Barroá.
+                            Todos os direitos reservados.
+                        </p>
+
+                        <p style="
+                            margin-top:10px;
+                            color:#9ca3af;
+                            font-size:12px;
+                        ">
+                            E-mail automático enviado pelo sistema.
+                        </p>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+
+</table>
+
+</body>
+
+</html>

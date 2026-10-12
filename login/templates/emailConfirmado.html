@@ -14,14 +14,80 @@
     <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
     
 </head>
+<div class="mensagens"></div>
 <body>
     <div class="alert">
         <div class="alert-card">
             <h1 class="alert-title">aviso</h1>
-            <p class="message-alert">Email confirmado com sucesso! Agora faça o login  <a href="{% url 'login' %}">clicando aqui</a></p>
+            <p class="message-alert">Email confirmado com sucesso! Agora faça o login  <a style="text-decoration:underline;" href="{% url 'login' %}">clicando aqui</a></p>
         </div>
     </div>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <footer class="rodape">
+    <div class="rodape-container">
+      <div class="rodape-brand">
+        <div class="rodape-logo">
+          <img src="{% static 'images/logo.png' %}" alt="Barroá">
+          <span>Barroá</span>
+        </div>
+        <p>
+          Cerâmica feita à mão, com propósito, afeto e conexão. Peças únicas que carregam histórias e transformam momentos.
+        </p>
+        <div class="rodape-social">
+          <a href="https://www.instagram.com/barroa_ceramica?psln=OGN4aHNsdzMyajg5" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/5519991162601"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Comprar</h3>
+        <a href="{% url 'products' %}">Obras</a>
+        <a href="{% url 'cart' %}">Carrinho</a>
+        <a href="#contact">Encomendas</a>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Barroá</h3>
+        <a href="{% url 'home' %}#about">Sobre nós</a>
+        <a href="{% url 'home' %}#cursos">Oficinas e cursos</a>
+        <a href="{% url 'home' %}#contact">Entre em contato</a>
+        <a href="{% url 'homePerfil' %}">Minha conta</a>
+      </div>
+      <div class="rodape-coluna rodape-contato">
+        <h3>Fale conosco</h3>
+        <a href="https://wa.me/5519991162601"
+           target="_blank"
+           rel="noopener noreferrer">
+          <i data-lucide="message-circle"></i>
+          WhatsApp
+        </a>
+        <a href="mailto:jcconcalez@hotmail.com">
+          <i data-lucide="mail"></i>
+          jcconcalez@hotmail.com
+        </a>
+        <span>
+          <i data-lucide="clock"></i>
+          Atendimento de segunda a sexta
+        </span>
+      </div>
+    </div>
+    <div class="rodape-bottom">
+      <div>
+        <span>© 2026 Barroá. Todos os direitos reservados.</span>
+      </div>
+      
+    </div>
+  </footer>
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -8,206 +8,140 @@
   <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
   <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/erp.css' %}">
 </head>
 <body style="display: flex;flex-direction: column;">
-    <header class="nav" id="nav">
-        <div class="logoNav">
-            <img src="{% static 'images/logo.png' %}" alt="logo1">
-            <p class="nameStore">Barroá</p>
+    <div class="mensagens"></div>
+    <div id="loading">
+        <div class="spinner"></div>
+    </div>
+    <header class="nav siteHeader" id="nav">
+  <div class="headerContainer">
+    <div class="logoNav">
+      <img src="{% static 'images/logo.png' %}" alt="logo1">
+      <p class="nameStore">Barroá</p>
+    </div>
+    <div class="navButtons navActions">
+    <p class="logoutBtn carrinho actionIcon"><i data-lucide="log-out"></i></p>
+      <a href="{% url 'homePerfil' %}" class="actionIcon carrinho" aria-label="Minha Conta">
+        <i data-lucide="user" class="carrinhoIcon"></i>
+      </a>
+      <a href="{% url 'cart' %}" class="carrinho">
+        <i class="carrinhoIcon" data-lucide="shopping-cart"></i>
+        {% if cart|length > 0 %}
+          <span class="carrinhoQuantidade">{{cart|length}}</span>
+        {% endif %}
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerX">&#x2715;</span>
+      </button>
+    </div>
+    <div class="barraPesquisa" id="barraPesquisa">
+      <i data-lucide="search"></i>
+      <input type="search" id="inputPesquisa" placeholder="Buscar produtos..." autocomplete="off">
+      <button type="button" id="limparPesquisa" aria-label="Limpar pesquisa">
+          <i data-lucide="x"></i>
+      </button>
+      <div class="resultadoPesquisa" id="resultadoPesquisa"></div>
+    </div>
+  </div>
+  <nav class="links" id="navLinks">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'products' %}">Obras</a>
+    <a href="{% url 'home' %}#about">Sobre</a>
+    <a href="{% url 'home' %}#cursos">Oficinas e cursos</a> 
+    <a href="{% url 'home' %}#contact">Encomenda</a>
+  </nav>
+</header> 
+    <main class="erpPagina">
+    <section class="cardsProduto">
+        <section class="erpContainer">
+            <div class="erpHeader">
+                <div class="erpSearch">
+                    <input type="text"placeholder="Código do produto"class="inputIdProduto">
+                    <button class="filtrarProdutobtn">
+                        Filtrar
+                    </button>
+                </div>
+                <div class="erpButtons">
+                    <button class="btnNovo">Novo</button>
+                    <button class="btnEditar">Editar</button>
+                    <button class="btnExcluir">Excluir</button>
+                    <button class="btnSalvar">Salvar</button>
+                </div>
+            </div>
+            <div class="produtoContainer"></div>
+        </section>
+        </section>
+        <section class="erpPedidos">
+            <div class="pedidoERPHeader">
+                <div class="pedidoERPTitulo">
+                    <h2>Pedidos</h2>
+                    <span>Gerenciamento de pedidos</span>
+                </div>
+                <div class="erpSearch">
+                    <input type="text" id="codigoPedido" placeholder="Buscar pedido...">
+                    <button type="button" id="btnBuscarPedidoERP">Buscar</button>
+                </div>
+            </div>
+            <div id="pedidoERP"></div>
+        </section>
+        <section class="integracaoERP">
+        <div class="integracaoERPHeader">
+            <div class="integracaoERPIcone"><i data-lucide="truck"></i></div>
+            <div>
+                <h2>Melhor Envio</h2>
+                <span>Integração de envios</span>
+            </div>
         </div>
-        <button class="burger" id="burger" aria-label="Menu">
-            <span class="burgerLine"></span>
-            <span class="burgerLine"></span>
-            <span class="burgerLine"></span>
-            <span class="burgerX">&#x2715;</span>
-        </button>
-        <nav class="links" id="navLinks">
-            <a href="{% url 'home' %}#">Início</a>
-            <a href="{% url 'products' %}">Obras</a>
-            <a href="{% url 'home' %}#about">Sobre</a>
-            {% comment %} <a href="#events">Oficinas e cursos</a> {% endcomment %}
-            <a href="{% url 'home' %}#contact">Encomenda</a>
-            <p class="logoutBtn">Sair</a>
-        </nav>
-    </header>
-    <section class="cadProdutos">
-        <div class="cad">
-            <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Produto</p>
-            <form action="{%url 'cadProduto' %}" method="post" class="formulario">
-                {% csrf_token %}
-                <div class="input-group">
-                <label for="">Código do produto:</label>
-                <input type="number" name="codigo" id="codigo" placeholder="Código" required>
-            </div>
-            <div class="input-group">
-                <label for="">Descricao do produto:</label>
-                <input type="text" name="descricao" id="descricao" required>
-            </div>
-            <div class="input-group">
-                <label for="">Valor:</label>
-                <input type="number" name="valor" id="valor" required>
-            </div>
-            <div class="input-group">
-                <label for="">Quantidade:</label>
-                <input type="number" name="quantidade" id="quantidade" required >
-            </div>
-            <div class="input-group">
-                <label for="">Altura:</label>
-                <input type="number" name="altura" id="altura" inputmode="decimal" min="0.00" required>
-            </div>
-            <div class="input-group">
-                <label for="">Largura:</label>
-                <input type="number" name="largura" id="largura" inputmode="decimal" min="0.00" required>
-            </div>
-            <div class="input-group">
-                <label for="">Comprimento:</label>
-                <input type="number" name="comprimento" id="comprimento" inputmode="decimal" min="0.00" required>
-            </div>
-            <div class="input-group">
-                <label for="">Volume(L):</label>
-                <input type="number" name="volume" id="volume" inputmode="decimal" min="0.00" required>
-            </div>
-            <div class="input-group">
-                <label for="">Categoria:</label>
-                <input type="text" name="categoria" id="categoria" placeholder="(separe por vírgula)" required>
-            </div>
-            <div class="input-group">
-                <label for="">S ou N:</label>
-                <input type="text" name="ativo" id="ativo" placeholder="Sim ou não" required>
-            </div>
-            <div class="input-group">
-                <label for="">Peso:</label>
-                <input type="number" name="peso" id="peso" placeholder="(arredondado pra maior)" required>
-            </div>
-            <div class="input-group">
-                <input type="submit" value="Cadastrar">
-            </div>   
-            </form>
-        </div>
-        <div class="alt">
-            <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Editar Produto</p>
-            <form action="{%url 'cadProduto' %}" method="post" class="formulario edtForm">
-                {% csrf_token %}
-                <div class="input-group">
-                    <label for="">Id do produto:</label>
-                    <input type="text" name="descricao" id="descricao" required readonly class="id"> 
+        <div class="integracaoERPStatus">
+            {% if melhor_envio_token %}
+                <div class="integracaoERPStatusLinha">
+                    <span class="integracaoERPPonto conectado"></span>
+                    <strong>Conectado</strong>
                 </div>
-                <div class="input-group">
-                    <label for="">Código do produto:</label>
-                    <input type="number" name="codigo" id="codigo" placeholder="Código" required class="codigo">
+                <p> Sua conta do Melhor Envio está conectada e pronta para realizar operações de envio.</p>
+                <div class="integracaoERPValidade">
+                    <i data-lucide="clock-3"></i>
+                    <span> Token válido até {{ melhor_envio_token.expires_at|date:"d/m/Y \à\s H:i" }}</span>
                 </div>
-                <div class="input-group">
-                    <label for="">Valor:</label>
-                    <input type="number" name="valor" id="valor" required class="valor">
+                <a href="{% url 'melhor_envio_autorizacao' %}" class="integracaoERPBotao">
+                    <i data-lucide="refresh-cw"></i> Reconectar
+                </a>
+            {% else %}
+                <div class="integracaoERPStatusLinha">
+                    <span class="integracaoERPPonto desconectado"></span>
+                    <strong>Não conectado</strong>
                 </div>
-                <div class="input-group">
-                    <label for="">Quantidade:</label>
-                    <input type="number" name="quantidade" id="quantidade" required class="quantidade">
-                </div>
-                <div class="input-group">
-                    <label for="">Altura:</label>
-                    <input type="number" name="altura" id="altura" inputmode="decimal" min="0.00" required class="altura">
-                </div>
-                <div class="input-group">
-                    <label for="">Largura:</label>
-                    <input type="number" name="Largura" id="Largura" inputmode="decimal" min="0.00" required class="largura">
-                </div>
-                <div class="input-group">
-                    <label for="">Comprimento:</label>
-                    <input type="number" name="Comprimento" id="Comprimento" inputmode="decimal" min="0.00" required class="comprimento">
-                </div>
-                <div class="input-group">
-                    <label for="">Volume(L):</label>
-                    <input type="number" name="Volume" id="Volume" inputmode="decimal" min="0.00" required class="volume"> 
-                </div>
-                <div class="input-group">
-                    <label for="">Categoria:</label>
-                    <input type="text" name="categoria" id="categoria" placeholder="(separe por vírgula)" required class="categoria">
-                </div>
-                <div class="input-group">
-                    <label for="">S ou N:</label>
-                    <input type="text" name="ativo" id="ativo" placeholder="Sim ou não" required class="ativo">
-                </div>
-                <div class="input-group">
-                    <label for="">Peso:</label>
-                    <input type="number" name="peso" id="peso" placeholder="(arredondado pra maior)" required class="peso">
-                </div>
-                <div class="input-group">
-                    <label for="">Descricao do produto:</label>
-                    <input type="text" name="descricao" id="descricao" required class="descricao">
-                </div>
-                <div class="input-group">
-                    <input type="submit" value="Editar"class="btnSendEdt">
-                </div>   
-            </form>
+                <p> Conecte sua conta do Melhor Envio para calcular fretes e gerar etiquetas. </p>
+                <a href="{% url 'melhor_envio_autorizacao' %}" class="integracaoERPBotao">
+                    <i data-lucide="plug"></i> Conectar Melhor Envio
+                </a>
+            {% endif %}
         </div>
     </section>
-    <section class="cardsProduto"></section>
-    <section class="cadCor">
-        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Cor</p>
-        <form action="{% url 'cadCor' %}" method="POST" class="formulario"style="max-width: 400px;">
-            {% csrf_token %}
-            <div class="input-group">
-            <label>Produto</label>
-            <select name="produto" required class="selectProduct">
-                <option value="">Selecione um produto</option>
-                {% for p in produtos %}
-                <option value="{{ p.codigo }}">
-                    {{ p.codigo }}
-                </option>
-                {% endfor %}
-            </select>
-            </div>
-            
-            <div class="input-group">
-                <label>Cor</label>
-                <input type="text" name="cor" placeholder="Digite a cor" required>
-            </div>
-            <div class="input-group">
-                <input type="submit" value="Cadastrar"></input>
-            </div>
-            </form>
-    </section>
-
-    <section class="cadImagem">
-        <p style="font-size: 40px;font-family: Story Script, sans-serif;color: #9c4b23;text-align: center;">Cadastrar Imagem</p>
-        <form method="POST" action="{%url 'cadImagem' %}" enctype="multipart/form-data" class="formImagem">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="produto">Produto</label>
-                <select id="produto" name="produto" required class="selectProduct">
-                    <option value="">Selecione um produto</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label for="cor">Cor</label>
-                <select id="cor" name="cor" disabled required class="selectColor">
-                    <option value="">Selecione primeiro um produto</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label for="imagem">Imagem</label>
-                <input type="file" id="imagem" name="imagem" accept="image/*" required class="inputImage">
-            </div>
-            <div class="previewContainer">
-                <img id="previewImagem" src="" alt="" class="previewImage">
-            </div>
-            <div class="input-group">
-                <input type="submit" value="Cadastrar">
-            </div>
-        </form>
-    </section>
-    <script id="jsonProdutos" type="application/json">
-        {{ produtos_json|safe }}
-    </script>
-    <script id="jsonCores" type="application/json">
-        {{ cores_json|safe }}
-    </script>
-    <script id="jsonImages" type="application/json">
-        {{ images_json|safe }}
-    </script>
+    </main>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="errorForm {{ message.tags }}">
+                    {% if 'success' in message.tags %}
+                        <i data-lucide="circle-check" style="color:#00c853; width:20px; height:20px;"></i>
+                    {% else %}
+                        <i data-lucide="circle-x" style="color:red; width:20px; height:20px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
     <script src="{% static 'js/script.js' %}"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>lucide.createIcons();</script>
+    
 </body>
 </html>

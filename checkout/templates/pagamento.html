@@ -1,0 +1,279 @@
+{% load static %}
+{% load l10n %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento | Cerâmica Barroá</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet"href="{% static 'css/style.css' %}">
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+<body>
+<header class="nav siteHeader" id="nav">
+  <div class="headerContainer">
+    <div class="logoNav">
+      <img src="{% static 'images/logo.png' %}" alt="logo1">
+      <p class="nameStore">Barroá</p>
+    </div>
+    <div class="navButtons navActions">
+        {% if request.user != AnonymousUser%}
+        <p class="logoutBtn carrinho actionIcon"><i data-lucide="log-out" class="carrinhoIcon"></i></p>
+        {% endif %}
+      <a href="{% url 'homePerfil' %}" class="actionIcon carrinho" aria-label="Minha Conta">
+        <i data-lucide="user" class="carrinhoIcon"></i>
+      </a>
+      <a href="{% url 'cart' %}" class="carrinho">
+        <i class="carrinhoIcon" data-lucide="shopping-cart"></i>
+        {% if cart|length > 0 %}
+          <span class="carrinhoQuantidade">{{cart|length}}</span>
+        {% endif %}
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerLine"></span>
+        <span class="burgerX">&#x2715;</span>
+      </button>
+    </div>
+    <div class="barraPesquisa" id="barraPesquisa">
+      <i data-lucide="search"></i>
+      <input type="search" id="inputPesquisa" placeholder="Buscar produtos..." autocomplete="off">
+      <button type="button" id="limparPesquisa" aria-label="Limpar pesquisa">
+          <i data-lucide="x"></i>
+      </button>
+      <div class="resultadoPesquisa" id="resultadoPesquisa"></div>
+    </div>
+  </div>
+  <nav class="links" id="navLinks">
+    <a href="{% url 'home' %}">Início</a>
+    <a href="{% url 'products' %}">Obras</a>
+    <a href="{% url 'home' %}#about">Sobre</a>
+    <a href="{% url 'home' %}#cursos">Oficinas e cursos</a> 
+    <a href="{% url 'home' %}#contact">Encomenda</a>
+  </nav>
+</header> 
+<main class="checkoutSection">
+    <div class="checkoutContainer"></div>
+        <div class="checkoutHeader">
+            <h1 class="special" style="margin-top:20px;">Pagamento</h1>
+            <p>Escolha a forma de pagamento para finalizar seu pedido.</p>
+        </div>
+        <div class="paymentOrderCard">
+            <div class="paymentOrderHeader">
+                <span>Pedido</span>
+                <strong>#{{ pedido.id }}</strong>
+            </div>
+            <div class="paymentOrderValues">
+                <div>
+                    <span>Subtotal</span>
+                    <strong>R$ {{ pedido.subtotal }}</strong>
+                </div>
+                <div>
+                    <span>Frete</span>
+                    <strong>R$ {{ pedido.frete }}</strong>
+                </div>
+                </div>
+                <div class="paymentOrderDivider"></div>
+                <div class="paymentOrderTotal">
+                    <span>Total</span>
+                    <strong>R$ {{ pedido.total }}</strong>
+                </div>
+            </div>
+            <div class="paymentSection">
+                <div class="paymentHeader">
+                    <h2>Forma de pagamento</h2>
+                    <p>Escolha como deseja pagar seu pedido.</p>
+                </div>
+                <div id="paymentBrick_container"></div>
+            </div>
+        </div>  
+</main>
+<footer class="rodape">
+    <div class="rodape-container">
+      <div class="rodape-brand">
+        <div class="rodape-logo">
+          <img src="{% static 'images/logo.png' %}" alt="Barroá">
+          <span>Barroá</span>
+        </div>
+        <p>
+          Cerâmica feita à mão, com propósito, afeto e conexão. Peças únicas que carregam histórias e transformam momentos.
+        </p>
+        <div class="rodape-social">
+          <a href="https://www.instagram.com/barroa_ceramica?psln=OGN4aHNsdzMyajg5" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/5519991162601"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="WhatsApp">
+            <i data-lucide="message-circle"></i>
+          </a>
+        </div>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Comprar</h3>
+        <a href="{% url 'products' %}">Obras</a>
+        <a href="{% url 'cart' %}">Carrinho</a>
+        <a href="#contact">Encomendas</a>
+      </div>
+      <div class="rodape-coluna">
+        <h3>Barroá</h3>
+        <a href="#about">Sobre nós</a>
+        <a href="#cursos">Oficinas e cursos</a>
+        <a href="#contact">Entre em contato</a>
+        <a href="{% url 'homePerfil' %}">Minha conta</a>
+      </div>
+      <div class="rodape-coluna rodape-contato">
+        <h3>Fale conosco</h3>
+        <a href="https://wa.me/5519991162601"
+           target="_blank"
+           rel="noopener noreferrer">
+          <i data-lucide="message-circle"></i>
+          WhatsApp
+        </a>
+        <a href="mailto:jcconcalez@hotmail.com">
+          <i data-lucide="mail"></i>
+          jcconcalez@hotmail.com
+        </a>
+        <span>
+          <i data-lucide="clock"></i>
+          Atendimento de segunda a sexta
+        </span>
+      </div>
+    </div>
+    <div class="rodape-bottom">
+      <div>
+        <span>© 2026 Barroá. Todos os direitos reservados.</span>
+      </div>
+      
+    </div>
+  </footer>
+<script>
+function getCsrfToken() {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+        const c = cookie.trim();
+        if (c.startsWith("csrftoken=")) {
+            return c.substring("csrftoken=".length,c.length);
+        }
+    }
+    return "";
+}
+function calcularMaxParcelas(valor) {
+    const valorMinimoParcela = 30;
+    const parcelas = Math.floor(valor / valorMinimoParcela);
+    return Math.min(parcelas, 18);
+}
+
+const mp = new MercadoPago(
+    "{{ mercado_pago_public_key }}",
+    {
+        locale: "pt-BR"
+    }
+);
+const bricksBuilder = mp.bricks();
+const renderPaymentBrick = async (bricksBuilder) => {
+    const valorPedido = {{ pedido.total|unlocalize }};
+    const maxParcelas = calcularMaxParcelas(valorPedido);
+    const settings = {
+        initialization: {
+            amount: {{ pedido.total|unlocalize }},
+            payer: {
+                firstName: "{{ pedido.nome_cliente|default:'' }}",
+                lastName: "",
+                email: "{{ pedido.email_cliente }}"
+            }
+        },
+        customization: {
+            visual: {
+                style: {
+                    theme: "flat"
+                }
+            },
+            paymentMethods: {
+                creditCard: "all",
+                bankTransfer: "all",
+                maxInstallments: maxParcelas,
+                minInstallments: 1
+            }
+        },
+        callbacks: {
+            onReady: () => {
+                console.log("Payment Brick carregado.");
+            },
+            onSubmit: ({ selectedPaymentMethod, formData }) => {
+                console.log("Método selecionado:",selectedPaymentMethod);
+                console.log("Dados enviados pelo Brick:",formData);
+                return new Promise(
+                    (resolve, reject) => {
+                        const dadosPagamento = {
+                            ...formData,
+                            pedido_id: {{ pedido.id }}
+                        };
+                        fetch("{% url 'criar_pagamento' %}",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type":"application/json",
+                                    "X-CSRFToken": getCsrfToken()
+                                },
+                                body:JSON.stringify(dadosPagamento)
+                            }
+                        )
+                        .then(
+                            response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP ${response.status}`);
+                                }
+                                return response.json();
+                            }
+                        )
+                        .then(
+                            dados => {
+                                console.log("Resposta do servidor:",dados);
+                                if (dados.status === "ok" || dados.status === "pending") {
+                                    window.location.href = dados.redirect_url;
+                                    resolve();
+                                    return;
+                                }
+                                console.error("Erro no pagamento:",dados);
+                                alert(dados.mensagem ||"Não foi possível processar o pagamento.");
+                                reject();
+                            }
+                        )
+                        .catch(
+                            erro => {
+                                console.error("Erro:",erro);
+                                alert("Erro ao processar o pagamento.");
+                                reject();
+                            }
+                        );
+                    }
+                );
+            },
+            onError: (error) => {
+                console.error("Erro no Payment Brick:",error);
+            }
+        }
+    };
+    window.paymentBrickController =
+        await bricksBuilder.create(
+            "payment",
+            "paymentBrick_container",
+            settings
+        );
+};
+renderPaymentBrick(bricksBuilder);
+</script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

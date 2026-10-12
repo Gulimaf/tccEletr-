@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Pagamento aprovado | Cerâmica Barroá</title>
+    <link rel="stylesheet"href="{% static 'css/pagamento.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+</head>
+<body>
+<div class="pagamento-page">
+    <div class="pagamento-container">
+        <div class="pagamento-card">
+            <div class="pagamento-icon sucesso"><i data-lucide="check" style="stroke-width: 1px;"></i></div>
+            <h1>Pagamento aprovado!</h1>
+            <p class="pagamento-subtitulo">
+                Tudo certo! Seu pagamento foi confirmado
+                e seu pedido já está sendo preparado.
+            </p>
+            <div class="pagamento-info">
+                <div class="pagamento-info-item">
+                    <span>Pedido</span>
+                    <strong>
+                        #{{ pedido.id }}
+                    </strong>
+                </div>
+                <div class="pagamento-info-item">
+                    <span>Status</span>
+                    <strong>
+                        Pagamento aprovado
+                    </strong>
+                </div>
+                <div class="pagamento-info-item">
+                    <span>Total</span>
+                    <strong>
+                        R$ {{ pedido.total }}
+                    </strong>
+                </div>
+            </div>
+            <div class="pagamento-alerta success">
+                <strong>Pedido confirmado!</strong>
+                <br>
+                Você pode acompanhar o andamento do seu pedido pela área de pedidos.
+            </div>
+            <div class="pagamento-acoes">
+                <a href="{% url 'homePerfil' %}"class="pagamento-btn pagamento-btn-principal">Acompanhar pedido</a>
+                <a href="{% url 'home' %}"class="pagamento-btn pagamento-btn-secundario">Continuar comprando</a>
+            </div>
+        </div>
+        <div class="pagamento-footer">
+            <strong>Cerâmica Barroá</strong>· Obrigado pela sua compra!
+        </div>
+    </div>
+</div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

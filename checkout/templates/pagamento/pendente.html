@@ -1,0 +1,130 @@
+{% load static %} 
+<!DOCTYPE html> 
+<html lang="pt-br"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" > 
+        <title>Pagamento pendente | Cerâmica Barroá</title> 
+        <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+        <link rel="stylesheet" href="{% static 'css/pagamento.css' %}" > 
+    </head> 
+    <body> 
+        <div class="pagamento-page"> 
+            <div class="pagamento-container"> 
+                <div class="pagamento-card">
+                    <div class="pagamento-icon pendente">
+                        <svg xmlns="http://www.w3.org/2000/svg"fill="none"viewBox="0 0 24 24"stroke="currentColor">
+                            <path stroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h1>Pagamento pendente</h1>
+                    <p class="pagamento-subtitulo">Seu pagamento ainda está pendente.</p>
+                    {% if qr_code_base64 %}
+                        <div class="pix-container">
+                            <h2>Pagamento via PIX</h2>
+                            <p>Escaneie o QR Code abaixo com o aplicativo do seu banco.</p>
+                            <div class="pix-qrcode">
+                                <img src="data:image/png;base64,{{ qr_code_base64 }}"alt="QR Code PIX">
+                            </div>
+                            {% if qr_code %}
+                                <div class="pix-copia-cola">
+                                    <label for="pixCodigo">PIX Copia e Cola</label>
+                                    <div class="pix-input-group">
+                                        <input type="text" id="pixCodigo"value="{{ qr_code }}"readonly>
+                                        <button type="button"onclick="copiarPix()">
+                                            Copiar
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if ticket_url %}
+                                <a href="{{ ticket_url }}"target="_blank"class="pagamento-btn pagamento-btn-principal">
+                                    Abrir pagamento PIX
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="pagamento-pendente-info">
+                            <p>Seu pagamento PIX ainda está pendente.</p>
+                            <p>Assim que o pagamento for identificado, seu pedido será atualizado automaticamente.</p>
+                        </div>
+                    {% endif %}
+                    <div class="pagamento-info">
+                        <div class="pagamento-info-item">
+                            <span>Pedido</span>
+                            <strong>#{{ pedido_id }}</strong>
+                        </div>
+                        <div class="pagamento-info-item">
+                            <span>Status</span>
+                            <strong id="statusPagamento">Aguardando pagamento</strong>
+                        </div>
+                    </div>
+                    <div class="pagamento-alerta warning">
+                        <strong>Não é necessário realizar outro pagamento.</strong>
+                        <br>
+                        Após realizar o PIX, aguarde a confirmação.
+                    </div>
+                    <div class="pagamento-acoes">
+                        <a href="{% url 'homePerfil' %}"class="pagamento-btn pagamento-btn-secundario">
+                            Acompanhar pedido
+                        </a>
+                        <a href="{% url 'home' %}"class="pagamento-btn pagamento-btn-secundario">
+                            Voltar à loja
+                        </a>
+                    </div>
+                </div>
+            </div> 
+<script>
+    function copiarPix() {
+        const campo = document.getElementById("pixCodigo");
+        navigator.clipboard.writeText(campo.value)
+            .then(() => {
+                const botao = document.querySelector(".pix-input-group button");
+                const textoOriginal = botao.textContent;
+                botao.textContent = "Copiado!";
+                setTimeout(() => {
+                    botao.textContent = textoOriginal;
+                }, 2000);
+            })
+            .catch(() => {
+                campo.select();
+                document.execCommand("copy");
+            });
+            
+    }
+    const urlConsulta ="{% url 'consultar_pagamento' pedido_id %}";
+    async function consultarPagamento() {
+        try {
+            const response = await fetch(urlConsulta);
+            if (!response.ok) {
+                throw new Error(
+                    `Erro HTTP ${response.status}`
+                );
+            }
+            const data = await response.json();
+            console.log("Status do pagamento:", data.status);
+            if (data.status === "approved") {
+                window.location.href =data.redirect_url;
+                return;
+            }
+            if (data.status === "rejected" ||data.status === "cancelled" ) {
+                window.location.href =data.redirect_url;
+                return;
+            }
+            const status =document.querySelector("#statusPagamento");
+            if (status) {
+                status.textContent ="Aguardando confirmação do pagamento...";
+            }
+        } catch (erro) {
+            console.error("Erro ao consultar pagamento:",erro);
+        }
+    }
+    consultarPagamento();
+    const intervalo = setInterval(
+        consultarPagamento,
+        5000
+    );
+</script>
+</body> 
+</html>
